@@ -281,7 +281,7 @@ public final class Tunnel {
         return close(true, true, true);
     }
 
-    public void error(String issue, Exception e, int i, int nChests, int k, int msgLen) {
+    private void error(String issue, Exception e, int i, int nChests, int k, int msgLen) {
         log.println("------------------------------------------------------------");
         log.println(issue);
         log.println("Time:              " + sdf.format(cal.getTime()));
