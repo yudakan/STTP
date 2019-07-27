@@ -17,7 +17,7 @@ import java.security.SecureRandom;
 public final class Key {
 
     /* Attributes */
-    public static final String DEFAULT_PATH_MYKEY = "./.packetKeys/myKey";
+    public static final String DEFAULT_PATH_APUROCHIKEY = "./.packetKeys/apurochiKey";
     public static final String DEFAULT_PATH_KYORIKEY = "./.packetKeys/kyoriKey";
     private int chestSize, msgfLen; // bytes of message per chest
     private byte[] key;
@@ -171,11 +171,11 @@ public final class Key {
         out.close();
     }
 
-    public static void pack(Key myKey, Key kyoriKey) throws IOException {
-        if (myKey.getKeyFile() == null)    myKey.saveAs(new File(DEFAULT_PATH_MYKEY));
-        else                               myKey.save();
-        if (kyoriKey.getKeyFile() == null) kyoriKey.saveAs(new File(DEFAULT_PATH_KYORIKEY));
-        else                               kyoriKey.save();
+    public static void pack(Key apurochiKey, Key kyoriKey) throws IOException {
+        if (apurochiKey.getKeyFile() == null)    apurochiKey.saveAs(new File(DEFAULT_PATH_APUROCHIKEY));
+        else                                     apurochiKey.save();
+        if (kyoriKey.getKeyFile() == null)       kyoriKey.saveAs(new File(DEFAULT_PATH_KYORIKEY));
+        else                                     kyoriKey.save();
     }
 
     public void save() throws IllegalStateException, IOException {

@@ -23,9 +23,9 @@ public final class Tester {
     public static void main(String[] args) throws Exception {
 
         // Generate Keys
-        Key myKey = new Key.Keygen().setBmpc(16).build();
+        Key apurochiKey = new Key.Keygen().setBmpc(16).build();
         Key kyoriKey = new Key.Keygen().build();
-        Key.pack(myKey, kyoriKey);
+        Key.pack(apurochiKey, kyoriKey);
 
         // Variables
         int port   = args.length > 0 ? Integer.parseInt(args[0]) : TCP.DEFAULT_PORT;

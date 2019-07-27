@@ -28,7 +28,7 @@ public final class Tunnel {
     private DataInputStream in;
     private DataOutputStream out;
     private PrintStream log;
-    private Key myKey, kyoriKey;
+    private Key apurochiKey, kyoriKey;
 
     private byte whoami = -1;
 
@@ -43,7 +43,7 @@ public final class Tunnel {
         this.in = builder.in;
         this.out = builder.out;
         this.log = builder.log;
-        this.myKey = builder.myKey;
+        this.apurochiKey = builder.apurochiKey;
         this.kyoriKey = builder.kyoriKey;
     }
 
@@ -53,7 +53,7 @@ public final class Tunnel {
         private DataInputStream in;
         private DataOutputStream out;
         private PrintStream log;
-        private Key myKey, kyoriKey;
+        private Key apurochiKey, kyoriKey;
 
 
         /* Constructors */
@@ -77,8 +77,8 @@ public final class Tunnel {
             return this;
         }
 
-        public Builder setMyKey(Key myKey) {
-            this.myKey = myKey;
+        public Builder setApurochiKey(Key apurochiKey) {
+            this.apurochiKey = apurochiKey;
             return this;
         }
 
@@ -92,7 +92,7 @@ public final class Tunnel {
                 if (in == null)           in = new DataInputStream(System.in);
                 if (out == null)          out = new DataOutputStream(System.out);
                 if (log == null)          log = new PrintStream(System.err, true);
-                if (myKey == null)        myKey = new Key(new File(Key.DEFAULT_PATH_MYKEY));
+                if (apurochiKey == null)        apurochiKey = new Key(new File(Key.DEFAULT_PATH_APUROCHIKEY));
                 if (kyoriKey == null)     kyoriKey = new Key(new File(Key.DEFAULT_PATH_KYORIKEY));
 
                 return new Tunnel(this);
@@ -114,15 +114,15 @@ public final class Tunnel {
         final int nChests;
         final byte[] header; // msgLen
         byte[] hash = null;
-        byte[] msgf = new byte[myKey.getMsgfLen()];
-        byte[] newKeyNoCrypt = new byte[myKey.getLength()];
-        byte[] newKey = new byte[myKey.getLength()];
+        byte[] msgf = new byte[apurochiKey.getMsgfLen()];
+        byte[] newKeyNoCrypt = new byte[apurochiKey.getLength()];
+        byte[] newKey = new byte[apurochiKey.getLength()];
 
         // Get msg
         msg = passByValue ? msg.clone() : msg;
 
         // Initialize final vars
-        nChests = (int)Math.ceil( (double)msg.length / myKey.getMsgfLen() );
+        nChests = (int)Math.ceil( (double)msg.length / apurochiKey.getMsgfLen() );
         header = ByteBuffer.allocate(4).putInt(msg.length).array();
 
         // Any Chest //
@@ -133,7 +133,7 @@ public final class Tunnel {
 
             // Get piece of msg
             if (i != nChests-1) {
-                for (j=0; j < myKey.getMsgfLen(); j++, k++)
+                for (j=0; j < apurochiKey.getMsgfLen(); j++, k++)
                     msgf[j] = msg[k];
             }
             else { // Last iteration
@@ -147,11 +147,11 @@ public final class Tunnel {
             System.arraycopy(newKeyNoCrypt, 0, newKey, 0, newKey.length);
 
             // Encrypt
-            xor(myKey.getKey_ByRef(), hash, msgf);
-            xor(myKey.getKey_ByRef(), newKey);
+            xor(apurochiKey.getKey_ByRef(), hash, msgf);
+            xor(apurochiKey.getKey_ByRef(), newKey);
 
             // Update actual key
-            System.arraycopy(newKeyNoCrypt, 0, myKey.getKey_ByRef(), 0, myKey.getLength());
+            System.arraycopy(newKeyNoCrypt, 0, apurochiKey.getKey_ByRef(), 0, apurochiKey.getLength());
 
             // Send
             try {
@@ -178,8 +178,8 @@ public final class Tunnel {
 
         // Who am I?
         if (whoami == -1) {
-            Key tempKey = myKey;
-            myKey = kyoriKey;
+            Key tempKey = apurochiKey;
+            apurochiKey = kyoriKey;
             kyoriKey = tempKey;
             whoami = 1;
         }
@@ -256,8 +256,8 @@ public final class Tunnel {
 
     public boolean saveKeys() {
         try {
-            if (whoami == 0)      Key.pack(myKey, kyoriKey);
-            else if(whoami == 1)  Key.pack(kyoriKey, myKey);
+            if (whoami == 0)      Key.pack(apurochiKey, kyoriKey);
+            else if(whoami == 1)  Key.pack(kyoriKey, apurochiKey);
 
             return true;
         }
